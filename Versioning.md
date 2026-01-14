@@ -1,3 +1,8 @@
+## 1.0.5(2026-01-14)
+
+### Bug Fixes
+* improve versioning script to parse Versioning.md for smart release detection ([1754b34](https://github.com/liguiqi-het/fcppVersionCheck/commit/1754b34))
+
 ## 1.0.4(2026-01-14)
 
 ### Bug Fixes
