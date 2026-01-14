@@ -1,3 +1,11 @@
+# 1.3.0(2026-01-14)
+
+### Features
+* release buiid on test √ V1.20 ([55c93f3](https://github.com/liguiqi-het/fcppVersionCheck/commit/55c93f3))
+
+### Bug Fixes
+* release buiid on test √ V1.11 ([4ad0a3b](https://github.com/liguiqi-het/fcppVersionCheck/commit/4ad0a3b))
+
 # 1.2.0(2026-01-14)
 
 ### Features
