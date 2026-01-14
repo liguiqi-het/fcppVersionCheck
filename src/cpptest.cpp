@@ -81,3 +81,6 @@ void test_cpp_zlib() {
 // 非格式化: verisoning test V1.01 ×
 // 非格式化: verisoning test V1.02 ××
 // fix: verisoning test V1.02 √
+
+
+// release buiid on------ fix : release buiid on test
