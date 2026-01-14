@@ -60,13 +60,57 @@ def get_repo_url():
         return "https://github.com/owner/repo"
 
 
+def parse_versioning_md():
+    """Parse Versioning.md to get the latest version and commit hash"""
+    # __file__ is .github/misc/commit_semver.py
+    # parent.parent is .github/, need to go one more level up to reach root
+    changelog_path = Path(__file__).parent.parent.parent / "Versioning.md"
+
+    if not changelog_path.exists():
+        return None, None
+
+    content = changelog_path.read_text(encoding="utf-8")
+
+    # Find the latest version entry (first ## heading)
+    # Extract version like ## 1.0.1(2026-01-14)
+    version_match = re.search(r'^##\s+(\d+\.\d+\.\d+)\([^)]+\)', content, re.MULTILINE)
+    if not version_match:
+        return None, None
+
+    latest_version = version_match.group(1)
+
+    # Find the first commit hash in that version section
+    # Format: * message ([hash](url))
+    hash_match = re.search(r'\[([a-f0-9]{7,})\]\(', content)
+    if hash_match:
+        commit_hash = hash_match.group(1)
+        return latest_version, commit_hash
+
+    return latest_version, None
+
+
 def analyze_commits():
     repo_url = get_repo_url()
 
-    result = run("git log --grep='chore(release):' -n 1 --format=%H")
-    since = result.stdout.strip()
+    # Get the last recorded version and commit from Versioning.md
+    latest_version, last_hash = parse_versioning_md()
 
-    format_str = "%s%n%b---ENDMSG---%h"
+    if last_hash:
+        # Use the commit hash from Versioning.md as the starting point
+        since = last_hash
+        print(f"Found version {latest_version} in Versioning.md, last commit: {since}")
+    else:
+        # Fallback to looking for the last chore(release) commit
+        result = run("git log --grep='chore(release):' -n 1 --format=%H")
+        since = result.stdout.strip()
+        if since:
+            print(f"Found last release commit: {since}")
+        else:
+            print("No previous version found, analyzing all commits")
+
+    # Use a unique delimiter that won't appear in commit messages
+    # Each line will be: hash|||message
+    format_str = "%h|||%s"
     if since:
         cmd = f"git log {since}..HEAD --format='{format_str}'"
     else:
@@ -76,7 +120,8 @@ def analyze_commits():
     if not result.stdout.strip():
         return 0, {}
 
-    raw_blocks = result.stdout.strip().split("---ENDMSG---")
+    # Split by lines first, then by delimiter
+    lines = result.stdout.strip().split('\n')
 
     level = 0
     entries = {
@@ -107,9 +152,14 @@ def analyze_commits():
         "chore": ("Chore", 0)
     }
 
-    for i in range(len(raw_blocks) - 1):
-        full_msg = raw_blocks[i].strip()
-        current_hash = raw_blocks[i+1].splitlines()[0].strip()
+    # Process each line: hash|||message
+    for line in lines:
+        if '|||' not in line:
+            continue
+
+        current_hash, full_msg = line.split('|||', 1)
+        current_hash = current_hash.strip()
+        full_msg = full_msg.strip()
 
         if not full_msg or "[skip ci]" in full_msg:
             continue
