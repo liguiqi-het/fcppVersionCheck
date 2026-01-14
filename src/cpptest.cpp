@@ -78,3 +78,4 @@ void test_cpp_zlib() {
 // test
 // “非格式化: verisoning test”
 // fix: verisoning test V1.01 √
+// 非格式化: verisoning test V1.01 ×
