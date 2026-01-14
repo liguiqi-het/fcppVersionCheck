@@ -110,3 +110,5 @@ void test_cpp_zlib() {
 
 // release buiid on------ test: release buiid on test × V1.07
 // release buiid on------ feat: release buiid on test √ V1.10
+
+// release buiid on------ fix: release buiid on test √ V1.11
