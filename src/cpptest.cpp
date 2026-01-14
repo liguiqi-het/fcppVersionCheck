@@ -104,3 +104,6 @@ void test_cpp_zlib() {
 // release buiid on------ ffix: release buiid on test × V1.05
 // release buiid on------ fffix: release buiid on test × V1.05
 // release buiid on------ docs: release buiid on test × V1.05
+
+// release buiid on------ test: release buiid on test × V1.06
+
