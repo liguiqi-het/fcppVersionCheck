@@ -1,3 +1,8 @@
+## 1.0.7(2026-01-14)
+
+### Bug Fixes
+* release buiid on test × V1.06 ([ffb38d8](https://github.com/liguiqi-het/fcppVersionCheck/commit/ffb38d8))
+
 ## 1.0.6(2026-01-14)
 
 ### Bug Fixes
